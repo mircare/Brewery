@@ -1,5 +1,5 @@
 # Brewery
-### state-of-the-art ab initio prediction of 1D protein structure annotations 
+### State-of-the-art ab initio prediction of 1D protein structure annotations 
 
 The web server of Brewery is available at http://distilldeep.ucd.ie/brewery/.  
 The train and test sets are available at http://distilldeep.ucd.ie/brewery/data/.
@@ -32,8 +32,39 @@ $ git clone https://github.com/mircare/Brewery/
 $ python3 Brewery/Brewery.py -i Brewery/example/2FLGA.fasta --cpu 4 --fast
 
 # To exploit both PSI-BLAST and HHblits (for very accurate predictions)
-$ python3 Brewery/Porter5.py -i Brewery/example/2FLGA.fasta --cpu 4
+$ python3 Brewery/Brewery.py -i Brewery/example/2FLGA.fasta --cpu 4
 ```
+
+
+## How to visualize the help of Brewery
+```
+$ python3 Brewery/Porter5.py --help
+usage: Brewery.py [-h] [-input fasta_file] [--cpu CPU] [--fast] [--noSS]
+                  [--noTA] [--noSA] [--noCD] [--distill] [--setup]
+
+This is the standalone of Brewery5. Run it on a FASTA file to predict its
+Secondary Structure in 3- and 8-classes (Porter5), Solvent Accessibility in 4
+classes (PaleAle5), Torsional Angles in 14 classes (Porter+5) and Contact
+Density in 4 classes (BrownAle).
+
+optional arguments:
+  -h, --help         show this help message and exit
+  -input fasta_file  FASTA file containing the protein to predict
+  --cpu CPU          How many cores to perform this prediction
+  --fast             Use only HHblits (skip PSI-BLAST)
+  --noSS             Skip Secondary Structure prediction with Porter5
+  --noTA             Skip Torsional Angles prediction with Porter+5
+  --noSA             Skip Solvent Accessibility prediction with PaleAle5
+  --noCD             Skip Contact Density prediction with BrownAle5
+  --distill          Generate useful outputs for 3D protein structure
+                     prediction
+  --setup            Initialize Brewery5 from scratch (it is recommended when
+                     there has been any change involving PSI-BLAST, HHblits,
+                     Brewery itself, etc).
+
+E.g., run Brewery on 4 cores: python3 Brewery5.py -i example/2FLGA --cpu 4
+```
+
 
 ## Performances of Secondary Structure Predictors in 3 classes
 | Method | Q3 per AA | SOV per AA | Q3 per protein | SOV per protein |
@@ -62,6 +93,7 @@ Reference: Table 1 in https://doi.org/10.1101/289033.
 | SSpro5 *ab initio* | 68.85% | 72.26% | 69.27% | 73.06% |
 
 Reference: Table 2 in https://doi.org/10.1101/289033.
+
 
 ## Performances of Solvent Accessibility Predictors in up to 4 classes
 | Method | Q2 per AA | Q3 per AA | Q4 per AA |

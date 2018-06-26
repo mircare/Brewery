@@ -58,8 +58,10 @@ Reference: Table 1 in https://doi.org/10.1101/289033.
 | SSpro 5 *with templates* | 71.91% | 78.55% | 74.46% | 77.84% |
 | **Brewery *HHblits only*** | **71.8%** | **75.45%** | **72.83%** | **76.46%** |
 | RaptorX-Property | 70.74% | 74.88% | 71.78% | 75.84% |
+| DeepCNF | 69.76% | 73.6% | 70.14% | 73.93% |
 | SSpro5 *ab initio* | 68.85% | 72.26% | 69.27% | 73.06% |
 
+Reference: Table 2 in https://doi.org/10.1101/289033.
 
 ## Performances of Solvent Accessibility Predictors in up to 4 classes
 | Method | Q2 per AA | Q3 per AA | Q4 per AA |

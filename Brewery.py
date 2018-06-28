@@ -17,7 +17,7 @@ parser.add_argument("--distill", help="Generate useful outputs for 3D protein st
 parser.add_argument("--setup", help="Initialize Brewery5 from scratch (it is recommended when there has been any change involving PSI-BLAST, HHblits, Brewery itself, etc).", action="store_true")
 args = parser.parse_args()
 
-path = os.path.abspath(sys.argv[0].replace("Brewery5.py","scripts/"))
+path = os.path.dirname(os.path.abspath(sys.argv[0]))+"/scripts/"
 ## PSI-BLAST and HHblits variables and paths.
 config = configparser.ConfigParser()
 if not os.path.exists(path+"/config.ini") or args.setup:
@@ -48,7 +48,7 @@ if not args.input:
 
 # save protein path and name, and current PATH
 filename = "".join(args.input)
-pid = filename.split(".")[0]#replace(".fasta", "")
+pid = filename#.split(".")[0]#replace(".fasta", "")
 predict = path+"/Predict_BRNN/Predict"
 models = path+"/Predict_BRNN/models/"
 

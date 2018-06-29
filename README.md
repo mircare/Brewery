@@ -4,6 +4,7 @@
 The web server of Brewery is available at http://distilldeep.ucd.ie/brewery/.  
 The train and test sets are available at http://distilldeep.ucd.ie/brewery/data/.
 
+Porter 5 (state-of-the-art SS predictor) is available at http://distilldeep.ucd.ie/porter/.
 
 ### Reference
 Porter 5: fast, state-of-the-art ab initio prediction of protein secondary structure in 3 and 8 classes<br>

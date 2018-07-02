@@ -4,8 +4,8 @@ import time
 
 #### set variables
 ### set argparse
-parser = argparse.ArgumentParser(description="This is the standalone of Brewery5. Run it on a FASTA file to predict its Secondary Structure in 3- and 8-classes (Porter5), Solvent Accessibility in 4 classes (PaleAle5),  Torsional Angles in 14 classes (Porter+5) and Contact Density in 4 classes (BrownAle).",
-epilog="E.g., run Brewery on 4 cores: python3 Brewery5.py -i example/2FLGA --cpu 4")
+parser = argparse.ArgumentParser(description="This is the standalone of Brewery. Run it on a FASTA file to predict its Secondary Structure in 3- and 8-classes (Porter5), Solvent Accessibility in 4 classes (PaleAle5),  Torsional Angles in 14 classes (Porter+5) and Contact Density in 4 classes (BrownAle).",
+epilog="E.g., run Brewery on 4 cores: python3 Brewery.py -i example/2FLGA --cpu 4")
 parser.add_argument("-input", metavar='fasta_file', type=str, nargs=1, help="FASTA file containing the protein to predict")
 parser.add_argument("--cpu", type=int, default=1, help="How many cores to perform this prediction")
 parser.add_argument("--fast", help="Use only HHblits (skip PSI-BLAST)", action="store_true")
@@ -14,7 +14,7 @@ parser.add_argument("--noTA", help="Skip Torsional Angles prediction with Porter
 parser.add_argument("--noSA", help="Skip Solvent Accessibility prediction with PaleAle5", action="store_true")
 parser.add_argument("--noCD", help="Skip Contact Density prediction with BrownAle5", action="store_true")
 parser.add_argument("--distill", help="Generate useful outputs for 3D protein structure prediction", action="store_true")
-parser.add_argument("--setup", help="Initialize Brewery5 from scratch (it is recommended when there has been any change involving PSI-BLAST, HHblits, Brewery itself, etc).", action="store_true")
+parser.add_argument("--setup", help="Initialize Brewery from scratch (it is recommended when there has been any change involving PSI-BLAST, HHblits, Brewery itself, etc).", action="store_true")
 args = parser.parse_args()
 
 path = os.path.dirname(os.path.abspath(sys.argv[0]))+"/scripts"
@@ -37,7 +37,7 @@ if not os.path.exists(path+"/config.ini") or args.setup:
     # compile predict and set absolute paths for all model files
     os.system('cd %s/Predict_BRNN; make -B; cd ..;bash set_models.sh; cd %s' % (path, path))
     
-    print("\n>>>>> Setup completed successfully. If any problem, please run \"python3 Brewery5.py --setup\". <<<<<\n")
+    print("\n>>>>> Setup completed successfully. If any problem, please run \"python3 Brewery.py --setup\". <<<<<\n")
 else:
     config.read(path+"/config.ini")
 
@@ -354,7 +354,7 @@ if not args.noCD:
 
 # end
 timeEND = time.time()
-print('Brewery5 executed on %s in %.2fs (TOTAL)' % (filename, timeEND-time0))
+print('Brewery executed on %s in %.2fs (TOTAL)' % (filename, timeEND-time0))
 
 
 if args.distill:

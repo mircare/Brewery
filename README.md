@@ -68,30 +68,30 @@ E.g., run Brewery on 4 cores: python3 Brewery5.py -i example/2FLGA --cpu 4
 
 
 ## Performances of Secondary Structure Predictors in 3 classes
-| Method | Q3 per AA | SOV per AA | Q3 per protein | SOV per protein |
+| Method | Q3 per AA | SOV'99 per AA | Q3 per protein | SOV'99 per protein |
 | :--- | :---: | :---: | :---: | :---: |
-| **Brewery** | **83.81%** | **83.29%** | **84.32%** | **84.57%** |
-| SPIDER 3 | 83.15% | 82.04% | 83.42% | 83.17% |
-| **Brewery *HHblits only*** | **83.06%** | **82.21%** | **83.68%** | **83.71%** |
-| SSpro 5 *with templates* | 82.58% | 80.13% | 83.94% | 82.49% |
-| PSIPRED 4.01 | 81.88% | 80.17% | 82.48% | 81.70% |
-| RaptorX-Property | 81.86% | 81.86% | 82.57% | 83.13% |
-| Porter 4 | 81.66% | 81.11% | 82.29% | 82.51% | 
-| SSpro5 *ab initio* | 81.17% | 78.54% | 81.10% | 79.45% |
-| DeepCNF | 81.04% | 80.84% | 81.16% | 81.46% |
+| **Brewery** | **83.81%** | **80.41%** | **84.32%** | **81.05%** |
+| SPIDER 3 | 83.15% | 79.43% | 83.42% | 79.79% |
+| **Brewery *HHblits only*** | **83.06%** | **79.49%** | **83.68%** | **80.26%** |
+| SSpro 5 *with templates* | 82.58% | 78.54% | 83.94% | 80.29% |
+| PSIPRED 4.01 | 81.88% | 77.36% | 82.48% | 78.22% |
+| RaptorX-Property | 81.86% | 78.08% | 82.57% | 78.99% |
+| Porter 4 | 81.66% | 78.05% | 82.29% | 78.61% | 
+| SSpro5 *ab initio* | 81.17% | 76.87% | 81.10% | 76.92% |
+| DeepCNF | 81.04% | 76.74% | 81.16% | 76.99% |
 
 Reference: Table 1 in https://doi.org/10.1101/289033.
 
 
 ## Performances of Secondary Structure Predictors in 8 classes
-| Method | Q8 per AA | SOV per AA | Q8 per protein | SOV per protein |
+| Method | Q8 per AA | SOV8_refine per AA | Q8 per protein | SOV8_refine per protein |
 | :--- | :---: | :---: | :---: | :---: |
-| **Brewery** | **73.02%** | **76.83%** | **73.92%** | **77.67%** |
-| SSpro 5 *with templates* | 71.91% | 78.55% | 74.46% | 77.84% |
-| **Brewery *HHblits only*** | **71.8%** | **75.45%** | **72.83%** | **76.46%** |
-| RaptorX-Property | 70.74% | 74.88% | 71.78% | 75.84% |
-| DeepCNF | 69.76% | 73.6% | 70.14% | 73.93% |
-| SSpro5 *ab initio* | 68.85% | 72.26% | 69.27% | 73.06% |
+| **Brewery** | **73.02%** | **72.09%** | **73.92%** | **72.64%** |
+| SSpro 5 *with templates* | 71.91% | 70.72% | 74.46% | 73.45% |
+| **Brewery *HHblits only*** | **71.8%** | **71.16%** | **72.83%** | **71.74%** |
+| RaptorX-Property | 70.74% | 69.65% | 71.78% | 70.03% |
+| DeepCNF | 69.76% | 68.5% | 70.14% | 68.06% |
+| SSpro5 *ab initio* | 68.85% | 67.54% | 69.27% | 67.91% |
 
 Reference: Table 2 in https://doi.org/10.1101/289033.
 
@@ -108,11 +108,11 @@ Reference: Table 2 in https://doi.org/10.1101/289033.
 
 
 ## Performances of Torsion Angles Predictors in 14 classes
-| Method | Q14 per AA | SOV per AA | Q14 per protein | SOV per protein |
-| :--- | :---: | :---: | :---: | :---: |
-| **Brewery** | **69.93%** | **77.19%** | **70.59%** | **75.6%** |
-| SPIDER 3 | 66.58% | 74.04% | 66.27% | 71.8% |
-| Porter+ | 64.73% | 72.62% | 66% | 70.98% |
+| Method | Q14 per AA | Q14 per protein |
+| :--- | :---: | :---: |
+| **Brewery** | **69.93%** | **70.59%** |
+| SPIDER 3 | 66.58% | 66.27% |
+| Porter+ | 64.73% | 66% |
 
 
 ## Performances of Contact Density Predictors in 4 classes

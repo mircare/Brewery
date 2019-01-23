@@ -44,5 +44,5 @@ ls Predict_BRNN/models/CD4/*v78 >> Predict_BRNN/models/modelv78_cd4
 
 
 abs_path=`pwd`
-sed "s|Predict_BRNN/models|$abs_path\/Predict_BRNN/models|g" Predict_BRNN/models/modelv* -i
+sed -i'' -e "s|Predict_BRNN/models|$abs_path\/Predict_BRNN/models|g" Predict_BRNN/models/modelv*
 cd ../../

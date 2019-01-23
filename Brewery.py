@@ -2,9 +2,13 @@ import argparse, configparser
 import os, sys
 import time
 
-#### set variables
+## check Python version
+if sys.version_info[0] < 3:
+   print("Python2 detected, please use Python3.")
+exit()
+
 ### set argparse
-parser = argparse.ArgumentParser(description="This is the standalone of Brewery. Run it on a FASTA file to predict its Secondary Structure in 3- and 8-classes (Porter5), Solvent Accessibility in 4 classes (PaleAle5),  Torsional Angles in 14 classes (Porter+5) and Contact Density in 4 classes (BrownAle).",
+parser = argparse.ArgumentParser(description="This is the standalone of Brewery. Run it on a FASTA file to predict its Secondary Structure in 3- and 8-classes (Porter5), Solvent Accessibility in 4 classes (PaleAle5), Torsional Angles in 14 classes (Porter+5) and Contact Density in 4 classes (BrownAle).",
 epilog="E.g., run Brewery on 4 cores: python3 Brewery.py -i example/2FLGA --cpu 4")
 parser.add_argument("-input", metavar='fasta_file', type=str, nargs=1, help="FASTA file containing the protein to predict")
 parser.add_argument("--cpu", type=int, default=1, help="How many cores to perform this prediction")

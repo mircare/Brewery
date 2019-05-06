@@ -5,7 +5,7 @@ import time
 ## check Python version
 if sys.version_info[0] < 3:
    print("Python2 detected, please use Python3.")
-exit()
+   exit()
 
 ### set argparse
 parser = argparse.ArgumentParser(description="This is the standalone of Brewery. Run it on a FASTA file to predict its Secondary Structure in 3- and 8-classes (Porter5), Solvent Accessibility in 4 classes (PaleAle5), Torsional Angles in 14 classes (Porter+5) and Contact Density in 4 classes (BrownAle).",

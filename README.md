@@ -6,9 +6,12 @@ The train and test sets are available at http://distilldeep.ucd.ie/brewery/data/
 
 Porter 5 (state-of-the-art SS predictor) is available at http://distilldeep.ucd.ie/porter/.
 
-### Reference
+### References
 Porter 5: fast, state-of-the-art ab initio prediction of protein secondary structure in 3 and 8 classes<br>
 Mirko Torrisi, Manaz Kaleel and Gianluca Pollastri; bioRxiv 289033; doi: https://doi.org/10.1101/289033.
+
+Protein Structure Annotations; Essentials of Bioinformatics, Volume I. Springer Nature<br>
+Mirko Torrisi and Gianluca Pollastri; doi: https://doi.org/10.1007/978-3-030-02634-9_10.
 
 
 ## Setup
@@ -73,11 +76,11 @@ E.g., run Brewery on 4 cores: python3 Brewery5.py -i example/2FLGA --cpu 4
 | **Brewery** | **83.81%** | **80.41%** | **84.32%** | **81.05%** |
 | SPIDER 3 | 83.15% | 79.43% | 83.42% | 79.79% |
 | **Brewery *HHblits only*** | **83.06%** | **79.49%** | **83.68%** | **80.26%** |
-| SSpro 5 *with templates* | 82.58% | 78.54% | 83.94% | 80.29% |
+| SSpro 5.1 *with templates* | 82.58% | 78.54% | 83.94% | 80.29% |
 | PSIPRED 4.01 | 81.88% | 77.36% | 82.48% | 78.22% |
 | RaptorX-Property | 81.86% | 78.08% | 82.57% | 78.99% |
 | Porter 4 | 81.66% | 78.05% | 82.29% | 78.61% | 
-| SSpro5 *ab initio* | 81.17% | 76.87% | 81.10% | 76.92% |
+| SSpro 5.1 *ab initio* | 81.17% | 76.87% | 81.10% | 76.92% |
 | DeepCNF | 81.04% | 76.74% | 81.16% | 76.99% |
 
 Reference: Table 1 in https://doi.org/10.1101/289033.
@@ -87,11 +90,11 @@ Reference: Table 1 in https://doi.org/10.1101/289033.
 | Method | Q8 per AA | SOV8_refine per AA | Q8 per protein | SOV8_refine per protein |
 | :--- | :---: | :---: | :---: | :---: |
 | **Brewery** | **73.02%** | **72.09%** | **73.92%** | **72.64%** |
-| SSpro 5 *with templates* | 71.91% | 70.72% | 74.46% | 73.45% |
+| SSpro 5.1 *with templates* | 71.91% | 70.72% | 74.46% | 73.45% |
 | **Brewery *HHblits only*** | **71.8%** | **71.16%** | **72.83%** | **71.74%** |
 | RaptorX-Property | 70.74% | 69.65% | 71.78% | 70.03% |
 | DeepCNF | 69.76% | 68.5% | 70.14% | 68.06% |
-| SSpro5 *ab initio* | 68.85% | 67.54% | 69.27% | 67.91% |
+| SSpro 5.1 *ab initio* | 68.85% | 67.54% | 69.27% | 67.91% |
 
 Reference: Table 2 in https://doi.org/10.1101/289033.
 
@@ -99,11 +102,11 @@ Reference: Table 2 in https://doi.org/10.1101/289033.
 ## Performances of Solvent Accessibility Predictors in up to 4 classes
 | Method | Q2 per AA | Q3 per AA | Q4 per AA |
 | :--- | :---: | :---: | :---: |
-| ACCpro 5 *with templates* | 80.5% | N.A. | N.A. |
+| ACCpro 5.1 *with templates* | 80.5% | N.A. | N.A. |
 | **Brewery** | **80.48%** | **66.41%** | **56.46%** |
 | PaleAle 4 | 78.21% | N.A. | 52.53% |
 | SPIDER 3 | 77.91% | 61.19% | 49.01% |
-| ACCpro 5 *ab initio* | 76.6% | N.A. | N.A. |
+| ACCpro 5.1 *ab initio* | 76.6% | N.A. | N.A. |
 | RaptorX-Property | N.A. | 63.25% | N.A. |
 
 

@@ -7,11 +7,16 @@ The train and test sets are available at http://distilldeep.ucd.ie/brewery/data/
 Porter 5 (state-of-the-art SS predictor) is available at http://distilldeep.ucd.ie/porter/.
 
 ### References
+Protein Structure Annotations; Essentials of Bioinformatics, Volume I. Springer Nature<br>
+Mirko Torrisi and Gianluca Pollastri; doi: https://doi.org/10.1007/978-3-030-02634-9_10.
+
+PaleAle 5.0: prediction of protein relative solvent accessibility by deep learning; Proteins, Springer Nature<br>
+Mirko Torrisi, Manaz Kaleel and Gianluca Pollastri; toll-free link: https://rdcu.be/bNlXS
+
 Porter 5: fast, state-of-the-art ab initio prediction of protein secondary structure in 3 and 8 classes<br>
 Mirko Torrisi, Manaz Kaleel and Gianluca Pollastri; bioRxiv 289033; doi: https://doi.org/10.1101/289033.
 
-Protein Structure Annotations; Essentials of Bioinformatics, Volume I. Springer Nature<br>
-Mirko Torrisi and Gianluca Pollastri; doi: https://doi.org/10.1007/978-3-030-02634-9_10.
+
 
 
 ## Setup

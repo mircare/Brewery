@@ -21,7 +21,6 @@ Mirko Torrisi, Manaz Kaleel and Gianluca Pollastri; bioRxiv 289033; doi: https:/
 
 
 
-
 ## Setup
 ```
 $ git clone https://github.com/mircare/Brewery/
@@ -47,6 +46,18 @@ $ python3 Brewery/Brewery.py -i Brewery/example/2FLGA.fasta --cpu 4 --fast
 $ python3 Brewery/Brewery.py -i Brewery/example/2FLGA.fasta --cpu 4
 ```
 
+### How to run Brewery on multiple sequences
+```
+# To split a FASTA file with multiple sequences (Optionally)
+$ python3 Brewery/split_fasta.py many_sequences.fasta
+
+# To predict all the fasta files in a given directory (Fastas)
+$ python3 Brewery/multiple_fasta.py -i Fastas/ --cpu 4 --fast
+
+# To run multiple predictions in parallel (using a total of 8 cores)
+$ python3 Brewery/multiple_fasta.py -i Fastas/ --cpu 4 --parallel 2 --fast
+```
+All the parameters in the next section are valid.
 
 ## How to visualize the help of Brewery
 ```

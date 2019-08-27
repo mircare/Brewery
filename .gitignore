@@ -1,5 +1,10 @@
 # Compiled Object files
-scripts/Predict_BRNN/*.o
+scripts/Predict_BRNN/BRNN.o
+scripts/Predict_BRNN/Layer.o
+scripts/Predict_BRNN/MModel.o
+scripts/Predict_BRNN/NN.o
+scripts/Predict_BRNN/NNt.o
+scripts/Predict_BRNN/Predict_probs.o
 scripts/Predict_BRNN/Predict
 # Config file
 scripts/config.ini

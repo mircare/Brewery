@@ -10,6 +10,9 @@ Porter 5 (state-of-the-art SS predictor) is available at http://distilldeep.ucd.
 Protein Structure Annotations; Essentials of Bioinformatics, Volume I. Springer Nature<br>
 Mirko Torrisi and Gianluca Pollastri; doi: https://doi.org/10.1007/978-3-030-02634-9_10.
 
+Deeper Profiles and Cascaded Recurrent and Convolutional Neural Networks for state-of-the-art Protein Secondary Structure Prediction, Scientific Reports, Nature Publishing Group<br>
+Mirko Torrisi, Manaz Kaleel and Gianluca Pollastri; doi: https://doi.org/10.1038/s41598-019-48786-x
+
 PaleAle 5.0: prediction of protein relative solvent accessibility by deep learning; Proteins, Springer Nature<br>
 Mirko Torrisi, Manaz Kaleel and Gianluca Pollastri; toll-free link: https://rdcu.be/bNlXS
 

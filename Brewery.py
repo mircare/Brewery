@@ -302,7 +302,7 @@ if not args.noSA:
 
         for i in range(length):
             for j in range(classes):
-                SA[j] = round((3*prob_psi[i*classes+j]+3*prob_hh[i*classes+j]+prob_psihh[i*classes+j])/7, 4)
+                SA[j] = round((prob_psi[i*classes+j]+prob_hh[i*classes+j]+prob_psihh[i*classes+j])/3, 4)
             index = SA.index(max(SA))
             prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SA[0])+"\t"+str(SA[1])+"\t"+str(SA[2])+"\t"+str(SA[3])+"\n")
     else:

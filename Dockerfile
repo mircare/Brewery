@@ -7,7 +7,7 @@ RUN apt-get install git python3 python3-numpy hhsuite ncbi-blast+ -y
 RUN apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
 # get Brewery
-RUN git clone https://github.com/mircare/Brewery/
+RUN git clone https://github.com/mircare/Brewery/ --depth 1 && rm -rf Brewery/.git
 RUN git clone http://github.com/soedinglab/hh-suite
 
 ENV HHLIB=/hh-suite
@@ -20,7 +20,7 @@ RUN echo "uniref90 = /uniref90/uniref90_2018-03.fasta" >> Brewery/scripts/config
 RUN echo "hhblits = hhblits" >> Brewery/scripts/config.ini
 RUN echo "uniprot20 = /uniprot20/uniprot20_2016_02" >> Brewery/scripts/config.ini
 
-WORKDIR /Brewery/scripts/Predict_BRNN
+WORKDIR /Brewery/scripts/
 RUN bash set_models.sh && chmod a+x Predict
 
 WORKDIR /Brewery

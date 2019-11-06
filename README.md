@@ -23,7 +23,7 @@ Mirko Torrisi, Manaz Kaleel and Gianluca Pollastri; bioRxiv 289033; doi: https:/
 
 ## Setup
 ```
-$ git clone https://github.com/mircare/Brewery/
+$ git clone https://github.com/mircare/Brewery/ --depth 1 && rm -rf Brewery/.git
 ```
 
 ### Requirements

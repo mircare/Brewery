@@ -21,6 +21,6 @@ RUN echo "hhblits = hhblits" >> Brewery/scripts/config.ini
 RUN echo "uniprot20 = /uniprot20/uniprot20_2016_02" >> Brewery/scripts/config.ini
 
 WORKDIR /Brewery/scripts/Predict_BRNN
-RUN make -B && chmod a+x Predict && cd .. && bash set_models.sh
+RUN chmod a+x Predict && cd .. && bash set_models.sh
 
 WORKDIR /Brewery

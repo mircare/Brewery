@@ -90,15 +90,12 @@ E.g., run Brewery on 4 cores: python3 Brewery5.py -i example/2FLGA --cpu 4
 
 ### Use the docker image
 ```
-# Set-up docker image
-$ docker pull mircare/brewery
-
-# set the absolute PATHs for databases and query sequences (stored locally)
+# Set the absolute PATHs for databases and query sequences (stored locally)
 $ docker run --name brewery -v /**PATH_to_uniprot20_2016_02**:/uniprot20 \
 -v /**PATH_to_UniRef90_optional**:/uniref90 -v /**PATH_to_fasta_to_predict**:/Brewery/query \
 --cap-add IPC_LOCK mircare/brewery sleep infinity &
 
-# How to run a prediction using 5 cores and HHblits only
+# Run a prediction using 5 cores and HHblits only
 $ docker exec brewery python3 Brewery.py -i query/2FLGA.fasta --cpu 5 --fast
 ```
 

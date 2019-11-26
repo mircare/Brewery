@@ -263,7 +263,7 @@ if not args.noSS:
         else:
             for i in range(length):
                 for j in range(8):
-                    SS[j] = round((3*prob_psi[i*8+j]+3*prob_hh[i*8+j]+prob_psihh[i*8+j])/7, 4)
+                    SS[i][j] = round((3*prob_psi[i*8+j]+3*prob_hh[i*8+j]+prob_psihh[i*8+j])/7, 4)
     else:
         if args.bfd:
             for i in range(length):
@@ -272,7 +272,7 @@ if not args.noSS:
         else:
             for i in range(length):
                 for j in range(8):
-                    SS[j] = round(prob_hh[i*8+j], 4)
+                    SS[i][j] = round(prob_hh[i*8+j], 4)
     for i in range(length):
         index = SS[i].index(max(SS[i]))
         prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SS[i][0])+"\t"+str(SS[i][1])+"\t"+str(SS[i][2])+\
@@ -407,9 +407,10 @@ if not args.noSA:
             for i in range(length):
                 for j in range(classes):
                     SA[i][j] = round((prob_hh[i*classes+j]+prob_bfd[i*classes+j]+prob_hhbfd[i*classes+j])/3, 4)
-        for i in range(length):
-            for j in range(classes):
-                SA[i][j] = round(prob_hh[i*classes+j], 4)
+        else:
+            for i in range(length):
+                for j in range(classes):
+                    SA[i][j] = round(prob_hh[i*classes+j], 4)
     for i in range(length):
         index = SA[i].index(max(SA[i]))
         prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SA[i][0])+"\t"+str(SA[i][1])+"\t"+str(SA[i][2])+"\t"+str(SA[i][3])+"\n")

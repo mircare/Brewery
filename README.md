@@ -75,12 +75,12 @@ optional arguments:
   -input fasta_file  FASTA file containing the protein to predict
   --cpu CPU          How many cores to perform this prediction
   --fast             Use only HHblits (skip PSI-BLAST)
+  --bfd              Harness also the BFD database (https://bfd.mmseqs.com/)
   --noSS             Skip Secondary Structure prediction with Porter5
   --noTA             Skip Torsional Angles prediction with Porter+5
   --noSA             Skip Solvent Accessibility prediction with PaleAle5
   --noCD             Skip Contact Density prediction with BrownAle5
-  --distill          Generate useful outputs for 3D protein structure
-                     prediction
+  --distill          Generate useful outputs for 3D protein structure prediction
   --setup            Initialize Brewery5 from scratch (it is recommended when
                      there has been any change involving PSI-BLAST, HHblits,
                      Brewery itself, etc).

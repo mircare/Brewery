@@ -13,6 +13,7 @@ epilog="E.g., run Brewery on 4 cores: python3 Brewery.py -i example/2FLGA --cpu 
 parser.add_argument("-input", metavar='fasta_file', type=str, nargs=1, help="FASTA file containing the protein to predict")
 parser.add_argument("--cpu", type=int, default=1, help="How many cores to perform this prediction")
 parser.add_argument("--fast", help="Use only HHblits (skip PSI-BLAST)", action="store_true")
+parser.add_argument("--bfd", help="Harness also the BFD database (https://bfd.mmseqs.com/)", action="store_true")
 parser.add_argument("--noSS", help="Skip Secondary Structure prediction with Porter5", action="store_true")
 parser.add_argument("--noTA", help="Skip Torsional Angles prediction with Porter+5", action="store_true")
 parser.add_argument("--noSA", help="Skip Solvent Accessibility prediction with PaleAle5", action="store_true")
@@ -29,11 +30,13 @@ if not os.path.exists(path+"/config.ini") or args.setup:
     uniref90 = input("Please insert the absolute path to uniref90 (e.g., /home/username/UniProt/uniref90.fasta): ")
     hhblits = input("Please insert the call to HHblits (e.g., hhblits): ")
     uniprot20 = input("Please insert the absolute path to uniprot20 (e.g., /home/username/uniprot20_2016_02/uniprot20_2016_02): ")
+    bfd = input("Please insert the absolute path to BFD (e.g., /home/username/bfd/bfd_metaclust_clu_complete_id30_c90_final_seq.sorted_opt): ")
     
     config['DEFAULT'] = {'psiblast': psiblast,
                     'uniref90': uniref90,
                     'hhblits': hhblits,
-                    'uniprot20' : uniprot20}
+                    'uniprot20' : uniprot20,
+                    'bfd': bfd}
 
     with open(path+"/config.ini", 'w') as configfile:
         config.write(configfile)
@@ -85,6 +88,16 @@ os.system('%s/process-psi.sh %s.psi' % (path, pid))
 time2 = time.time()
 print('HHblits executed in %.2fs' % (time2-time1))
 
+## harness BFD
+if args.bfd:
+    time22 = time2
+    os.system('%s/reformat.pl psi fas %s.psi %s.fas -v 0' % (path, pid, pid))
+    os.system('%s -d %s -i %s.fas -opsi %s_bfd.psi -cpu %d -n 3 -maxfilt 150000 -maxmem 27 -v 2 2>> %s_bfd.log >> %s_bfd.log' % (config['DEFAULT']['hhblits'], config['DEFAULT']['bfd'], filename, pid, args.cpu, pid, pid))
+    os.system('%s/process-psi.sh %s_bfd.psi' % (path, pid))
+
+    time2 = time.time()
+    print('BFD harnessed in %.2fs' % (time22-time2))
+
 
 #### encode alignments made with HHblits or PSI-BLAST
 os.system('python3 %s/process-alignment.py %s.flatpsi flatpsi %d' % (path, pid, args.cpu)) # generated with HHblits
@@ -95,7 +108,7 @@ flatpsi_ann = open(pid+".flatpsi.ann", "r").readlines()
 if not args.fast:
     os.system('python3 %s/process-alignment.py %s.flatblast flatblast %d' % (path, pid, args.cpu)) # generated with PSI-BLAST
 
-    ## concatenate the previous 2
+    ## concatenate PSI-BLAST and HHblits inputs
     flatblast_ann = open(pid+".flatblast.ann", "r").readlines()
 
     # write header, protein name, and length
@@ -111,6 +124,24 @@ if not args.fast:
     flatblastpsi_ann.write(" ".join(tmp))
     flatblastpsi_ann.close()
 
+# encode BFD alignments and concatenated with HHblits inputs
+if args.bfd:
+    os.system('python3 %s/process-alignment.py %s_bfd.flatpsi flatpsi %d' % (path, pid, args.cpu)) # generated from BFD
+    flatbfd_ann = open(pid+"_bfd.flatpsi.ann", "r").readlines()
+
+    # write header, protein name, and length
+    flatpsibfd_ann = open(pid+".flatpsibfd.ann", "w")
+    flatpsibfd_ann.write("1\n44 3\n"+ pid +"\n"+ str(length) +"\n")
+
+    # concatenate and write input
+    tmp = flatpsi_ann[4].strip().split(" ")
+    tmp0 = flatbfd_ann[4].split(" ")
+    for j in range(length):
+        x = j*22
+        tmp.insert(x + 22 + j, " ".join(tmp0[x:x+22]))
+    flatpsibfd_ann.write(" ".join(tmp))
+    flatpsibfd_ann.close()
+
 time3 = time.time()
 print('Alignments encoded in %.2fs' % (time3-time2))
 
@@ -124,6 +155,9 @@ if not args.noSS:
     if not args.fast:
         os.system('%s %smodelv7_ss3 %s.flatblast.ann > /dev/null' % (predict, models, pid))
         os.system('%s %smodelv78_ss3 %s.flatblastpsi.ann > /dev/null' % (predict, models, pid))
+    if args.bfd:
+        os.system('%s %smodelv8_BFD_ss3 %s_bfd.flatpsi.ann > /dev/null' % (predict, models, pid))
+        os.system('%s %smodelv8_HH+BFD_ss3 %s.flatpsibfd.ann > /dev/null' % (predict, models, pid))
 
     time4 = time.time()
     print('Secondary Structure in 3 classes predicted in %.2fs' % (time4-time3))
@@ -131,26 +165,38 @@ if not args.noSS:
 
     ## ensemble predictions and process output
     toChar = {0 : "H", 1 : "E", 2 : "C"}
-    SS = [0] * 3
+    SS = [[0] * 3 for _ in range(length)]
     prediction = open(pid+".ss3", "w")
     prediction.write("#\tAA\tSS\tHelix\tSheet\tCoil\n")
 
     prob_hh = list(map(float, open(pid+".flatpsi.ann.probsF", "r").readlines()[3].split()))
+    if args.bfd:
+        prob_bfd = list(map(float, open(pid+"_bfd.flatpsi.ann.probsF", "r").readlines()[3].split()))
+        prob_hhbfd = list(map(float, open(pid+".flatpsibfd.ann.probsF", "r").readlines()[3].split()))
     if not args.fast:
         prob_psi = list(map(float, open(pid+".flatblast.ann.probsF", "r").readlines()[3].split()))
         prob_psihh = list(map(float, open(pid+".flatblastpsi.ann.probsF", "r").readlines()[3].split()))
-
-        for i in range(length):
-            for j in range(3):
-                SS[j] = round((3*prob_psi[i*3+j]+3*prob_hh[i*3+j]+prob_psihh[i*3+j])/7, 4)
-            index = SS.index(max(SS))
-            prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SS[0])+"\t"+str(SS[1])+"\t"+str(SS[2])+"\n")
+        if args.bfd:
+            for i in range(length):
+                for j in range(3):
+                    SS[i][j] = round((3*prob_psi[i*3+j]+3*prob_hh[i*3+j]+prob_psihh[i*3+j]+3*prob_bfd[i*3+j]+\
+                        prob_hhbfd[i*3+j])/11, 4)
+        else:
+            for i in range(length):
+                for j in range(3):
+                    SS[i][j] = round((3*prob_psi[i*3+j]+3*prob_hh[i*3+j]+prob_psihh[i*3+j])/7, 4)
     else:
-        for i in range(length):
-            for j in range(3):
-                SS[j] = round(prob_hh[i*3+j], 4)
-            index = SS.index(max(SS))
-            prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SS[0])+"\t"+str(SS[1])+"\t"+str(SS[2])+"\n")
+        if args.bfd:
+            for i in range(length):
+                for j in range(3):
+                    SS[i][j] = round((3*prob_hh[i*3+j]+3*prob_bfd[i*3+j]+prob_hhbfd[i*3+j])/7, 4)
+        else:
+            for i in range(length):
+                for j in range(3):
+                    SS[i][j] = round(prob_hh[i*3+j], 4)
+    for i in range(length):
+        index = SS[i].index(max(SS[i]))
+        prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SS[i][0])+"\t"+str(SS[i][1])+"\t"+str(SS[i][2])+"\n")
     prediction.flush()
 
 
@@ -175,6 +221,11 @@ if not args.noSS:
 
         flatblastpsi_ann = open(pid+".flatblastpsi.ann", "r").readlines()
         generate8statesANN("flatblastpsi", prob_psihh, flatblastpsi_ann)
+    if args.bfd:
+        generate8statesANN("flatbfd", prob_bfd, flatbfd_ann)
+
+        flatpsibfd_ann = open(pid+".flatpsibfd.ann", "r").readlines()
+        generate8statesANN("flatpsibfd", prob_hhbfd, flatpsibfd_ann)
 
 
     ### predict in 8 classes
@@ -182,6 +233,9 @@ if not args.noSS:
     if not args.fast:
         os.system('%s %smodelv7_ss8 %s.flatblast.ann+ss3 > /dev/null' % (predict, models, pid))
         os.system('%s %smodelv78_ss8 %s.flatblastpsi.ann+ss3 > /dev/null' % (predict, models, pid))
+    if args.bfd:
+        os.system('%s %smodelv8_BFD_ss8 %s.flatbfd.ann+ss3 > /dev/null' % (predict, models, pid))
+        os.system('%s %smodelv8_HH+BFD_ss8 %s.flatpsibfd.ann+ss3 > /dev/null' % (predict, models, pid))
 
     time5 = time.time()
     print('Secondary Structure in 8 classes predicted in %.2fs' % (time5-time4))
@@ -189,27 +243,40 @@ if not args.noSS:
 
     ### ensemble SS predictions and process output
     toChar = {0 : "G", 1 : "H", 2 : "I", 3 : "E", 4 : "B", 5 : "C", 6 : "S", 7 : "T"}
-    SS = [0] * 8
+    SS = [[0] * 8 for _ in range(length)]
 
     prediction = open(pid+".ss8", "w")
     prediction.write("#\tAA\tSS\tG\tH\tI\tE\tB\tC\tS\tT\n")
 
     prob_hh = list(map(float, open(pid+".flatpsi.ann+ss3.probsF", "r").readlines()[3].split()))
+    if args.bfd:
+        prob_bfd = list(map(float, open(pid+".flatbfd.ann+ss3.probsF", "r").readlines()[3].split()))
+        prob_hhbfd = list(map(float, open(pid+".flatpsibfd.ann+ss3.probsF", "r").readlines()[3].split()))
     if not args.fast:
         prob_psi = list(map(float, open(pid+".flatblast.ann+ss3.probsF", "r").readlines()[3].split()))
         prob_psihh = list(map(float, open(pid+".flatblastpsi.ann+ss3.probsF", "r").readlines()[3].split()))
-
-        for i in range(length):
-            for j in range(8):
-                SS[j] = round((3*prob_psi[i*8+j]+3*prob_hh[i*8+j]+prob_psihh[i*8+j])/7, 4)
-            index = SS.index(max(SS))
-            prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SS[0])+"\t"+str(SS[1])+"\t"+str(SS[2])+"\t"+str(SS[3])+"\t"+str(SS[4])+"\t"+str(SS[5])+"\t"+str(SS[6])+"\t"+str(SS[7])+"\n")
+        if args.bfd:
+            for i in range(length):
+                for j in range(8):
+                    SS[i][j] = round((3*prob_psi[i*8+j]+3*prob_hh[i*8+j]+prob_psihh[i*8+j]+\
+                        3*prob_bfd[i*8+j]+prob_hhbfd[i*8+j])/11, 4)
+        else:
+            for i in range(length):
+                for j in range(8):
+                    SS[j] = round((3*prob_psi[i*8+j]+3*prob_hh[i*8+j]+prob_psihh[i*8+j])/7, 4)
     else:
-        for i in range(length):
-            for j in range(8):
-                SS[j] = round(prob_hh[i*8+j], 4)
-            index = SS.index(max(SS))
-            prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SS[0])+"\t"+str(SS[1])+"\t"+str(SS[2])+"\t"+str(SS[3])+"\t"+str(SS[4])+"\t"+str(SS[5])+"\t"+str(SS[6])+"\t"+str(SS[7])+"\n")
+        if args.bfd:
+            for i in range(length):
+                for j in range(8):
+                    SS[i][j] = round((3*prob_hh[i*8+j]+3*prob_bfd[i*8+j]+prob_hhbfd[i*8+j])/7, 4)
+        else:
+            for i in range(length):
+                for j in range(8):
+                    SS[j] = round(prob_hh[i*8+j], 4)
+    for i in range(length):
+        index = SS[i].index(max(SS[i]))
+        prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SS[i][0])+"\t"+str(SS[i][1])+"\t"+str(SS[i][2])+\
+            "\t"+str(SS[i][3])+"\t"+str(SS[i][4])+"\t"+str(SS[i][5])+"\t"+str(SS[i][6])+"\t"+str(SS[i][7])+"\n")
     prediction.close()
 
 
@@ -227,32 +294,51 @@ if not args.noTA:
         os.system('sed -i "2s|.*|44 14|g" %s.flatblastpsi.ann' % pid)
         os.system('%s %smodelv7_ta14 %s.flatblast.ann > /dev/null' % (predict, models, pid))
         os.system('%s %smodelv78_ta14 %s.flatblastpsi.ann > /dev/null' % (predict, models, pid))
+    if args.bfd:
+        os.system('sed -i "2s|.*|22 14|g" %s_bfd.flatpsi.ann' % pid)
+        os.system('sed -i "2s|.*|44 14|g" %s.flatpsibfd.ann' % pid)
+        os.system('%s %smodelv8_BFD_ta14 %s_bfd.flatpsi.ann > /dev/null' % (predict, models, pid))
+        os.system('%s %smodelv8_HH+BFD_ta14 %s.flatpsibfd.ann > /dev/null' % (predict, models, pid))
 
     print('Torsion Angles in %d classes predicted in %.2fs' % (classes, (time.time()-time0TA)))
 
     ### ensemble TA predictions and process output
-    TA = [0] * classes
+    TA = [[0] * classes for _ in range(length)]
     toChar = {0 : "b", 1 : "h", 2 : "H", 3 : "I", 4 : "C", 5 : "e", 6 : "E", 7 : "S", 8 : "t", 9 : "g", 10 : "T", 11 : "B", 12 : "s", 13 : "i"}
 
     prediction = open(pid+".ta14", "w")
     prediction.write("#\tAA\tTA\tb\th\tH\tI\tC\te\tE\tS\tt\tg\tT\tB\ts\ti\n")
 
     prob_hh = list(map(float, open(pid+".flatpsi.ann.probsF", "r").readlines()[3].split()))
+    if args.bfd:
+        prob_bfd = list(map(float, open(pid+"_bfd.flatpsi.ann.probsF", "r").readlines()[3].split()))
+        prob_hhbfd = list(map(float, open(pid+".flatpsibfd.ann.probsF", "r").readlines()[3].split()))
     if not args.fast:
         prob_psi = list(map(float, open(pid+".flatblast.ann.probsF", "r").readlines()[3].split()))
         prob_psihh = list(map(float, open(pid+".flatblastpsi.ann.probsF", "r").readlines()[3].split()))
-
-        for i in range(length):
-            for j in range(classes):
-                TA[j] = round((3*prob_psi[i*classes+j]+3*prob_hh[i*classes+j]+prob_psihh[i*classes+j])/7, 4)
-            index = TA.index(max(TA))
-            prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(TA[0])+"\t"+str(TA[1])+"\t"+str(TA[2])+"\t"+str(TA[3])+"\t"+str(TA[4])+"\t"+str(TA[5])+"\t"+str(TA[6])+"\t"+str(TA[7])+"\t"+str(TA[8])+"\t"+str(TA[9])+"\t"+str(TA[10])+"\t"+str(TA[11])+"\t"+str(TA[12])+"\t"+str(TA[13])+"\n")
+        if args.bfd:
+            for i in range(length):
+                for j in range(classes):
+                    TA[i][j] = round((3*prob_psi[i*classes+j]+3*prob_hh[i*classes+j]+prob_psihh[i*classes+j]+\
+                        3*prob_bfd[i*classes+j]+prob_hhbfd[i*classes+j])/11, 4)
+        else:
+            for i in range(length):
+                for j in range(classes):
+                    TA[i][j] = round((3*prob_psi[i*classes+j]+3*prob_hh[i*classes+j]+prob_psihh[i*classes+j])/7, 4)
     else:
-        for i in range(length):
-            for j in range(classes):
-                TA[j] = round(prob_hh[i*classes+j], 4)
-            index = TA.index(max(TA))
-            prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(TA[0])+"\t"+str(TA[1])+"\t"+str(TA[2])+"\t"+str(TA[3])+"\t"+str(TA[4])+"\t"+str(TA[5])+"\t"+str(TA[6])+"\t"+str(TA[7])+"\t"+str(TA[8])+"\t"+str(TA[9])+"\t"+str(TA[10])+"\t"+str(TA[11])+"\t"+str(TA[12])+"\t"+str(TA[13])+"\n")
+        if args.bfd:
+            for i in range(length):
+                for j in range(classes):
+                    TA[i][j] = round((3*prob_hh[i*classes+j]+3*prob_bfd[i*classes+j]+prob_hhbfd[i*classes+j])/7, 4)
+        else:
+            for i in range(length):
+                for j in range(classes):
+                    TA[i][j] = round(prob_hh[i*classes+j], 4)
+    for i in range(length):
+        index = TA[i].index(max(TA[i]))
+        prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(TA[i][0])+"\t"+str(TA[i][1])+"\t"+str(TA[i][2])+\
+            "\t"+str(TA[i][3])+"\t"+str(TA[i][4])+"\t"+str(TA[i][5])+"\t"+str(TA[i][6])+"\t"+str(TA[i][7])+"\t"+str(TA[i][8])+
+            "\t"+str(TA[i][9])+"\t"+str(TA[i][10])+"\t"+str(TA[i][11])+"\t"+str(TA[i][12])+"\t"+str(TA[i][13])+"\n")
     prediction.close()
 
  
@@ -285,32 +371,48 @@ if not args.noSA:
         add_length(pid+".flatblastpsi.ann")
         os.system('%s %smodelv7_sa4 %s.flatblast.ann+len > /dev/null' % (predict, models, pid))
         os.system('%s %smodelv78_sa4 %s.flatblastpsi.ann+len > /dev/null' % (predict, models, pid))
+    if args.bfd:
+        add_length(pid+"_bfd.flatpsi.ann")
+        add_length(pid+".flatpsibfd.ann")
+        os.system('%s %smodelv8_BFD_sa4 %s_bfd.flatpsi.ann+len > /dev/null' % (predict, models, pid))
+        os.system('%s %smodelv8_HH+BFD_sa4 %s.flatpsibfd.ann+len > /dev/null' % (predict, models, pid))        
 
     print('Solvent Accessibility in %d classes predicted in %.2fs' % (classes, (time.time()-time0SA)))
 
     ### ensemble SA predictions and process output
-    SA = [0] * classes
+    SA = [[0] * classes for _ in range(length)]
     toChar = {0 : "B", 1 : "b", 2 : "e", 3 : "E"}
 
     prediction = open(pid+".sa4", "w")
     prediction.write("#\tAA\tSA\tB\tb\te\tE\n")
 
     prob_hh = list(map(float, open(pid+".flatpsi.ann+len.probsF", "r").readlines()[3].split()))
+    if args.bfd:
+        prob_bfd = list(map(float, open(pid+"_bfd.flatpsi.ann+len.probsF", "r").readlines()[3].split()))
+        prob_hhbfd = list(map(float, open(pid+".flatpsibfd.ann+len.probsF", "r").readlines()[3].split()))
     if not args.fast:
         prob_psi = list(map(float, open(pid+".flatblast.ann+len.probsF", "r").readlines()[3].split()))
         prob_psihh = list(map(float, open(pid+".flatblastpsi.ann+len.probsF", "r").readlines()[3].split()))
-
-        for i in range(length):
-            for j in range(classes):
-                SA[j] = round((prob_psi[i*classes+j]+prob_hh[i*classes+j]+prob_psihh[i*classes+j])/3, 4)
-            index = SA.index(max(SA))
-            prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SA[0])+"\t"+str(SA[1])+"\t"+str(SA[2])+"\t"+str(SA[3])+"\n")
+        if args.bfd:
+            for i in range(length):
+                for j in range(classes):
+                    SA[i][j] = round((prob_psi[i*classes+j]+prob_hh[i*classes+j]+prob_psihh[i*classes+j]+\
+                        prob_bfd[i*classes+j]+prob_hhbfd[i*classes+j])/5, 4)
+        else:
+            for i in range(length):
+                for j in range(classes):
+                    SA[i][j] = round((prob_psi[i*classes+j]+prob_hh[i*classes+j]+prob_psihh[i*classes+j])/3, 4)
     else:
+        if args.bfd:
+            for i in range(length):
+                for j in range(classes):
+                    SA[i][j] = round((prob_hh[i*classes+j]+prob_bfd[i*classes+j]+prob_hhbfd[i*classes+j])/3, 4)
         for i in range(length):
             for j in range(classes):
-                SA[j] = round(prob_hh[i*classes+j], 4)
-            index = SA.index(max(SA))
-            prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SA[0])+"\t"+str(SA[1])+"\t"+str(SA[2])+"\t"+str(SA[3])+"\n")
+                SA[i][j] = round(prob_hh[i*classes+j], 4)
+    for i in range(length):
+        index = SA[i].index(max(SA[i]))
+        prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(SA[i][0])+"\t"+str(SA[i][1])+"\t"+str(SA[i][2])+"\t"+str(SA[i][3])+"\n")
     prediction.close()
 
 
@@ -328,32 +430,49 @@ if not args.noCD:
         os.system('sed -i "2s|.*|44 4|g" %s.flatblastpsi.ann' % pid)
         os.system('%s %smodelv7_cd4 %s.flatblast.ann > /dev/null' % (predict, models, pid))
         os.system('%s %smodelv78_cd4 %s.flatblastpsi.ann > /dev/null' % (predict, models, pid))
+    if args.bfd:
+        os.system('sed -i "2s|.*|22 4|g" %s_bfd.flatpsi.ann' % pid)
+        os.system('sed -i "2s|.*|44 4|g" %s.flatpsibfd.ann' % pid)
+        os.system('%s %smodelv8_BFD_cd4 %s_bfd.flatpsi.ann > /dev/null' % (predict, models, pid))
+        os.system('%s %smodelv8_HH+BFD_cd4 %s.flatpsibfd.ann > /dev/null' % (predict, models, pid))
 
     print('Contact Density in %d classes predicted in %.2fs' % (classes, (time.time()-time0CD)))
 
     ### ensemble CD predictions and process output
-    CD = [0] * classes
+    CD = [[0] * classes for _ in range(length)]
     toChar = {0 : "N", 1 : "n", 2 : "c", 3 : "C"}
 
     prediction = open(pid+".cd4", "w")
     prediction.write("#\tAA\tCD\tN\tn\tc\tC\n")
 
     prob_hh = list(map(float, open(pid+".flatpsi.ann.probsF", "r").readlines()[3].split()))
+    if args.bfd:
+        prob_bfd = list(map(float, open(pid+"_bfd.flatpsi.ann.probsF", "r").readlines()[3].split()))
+        prob_hhbfd = list(map(float, open(pid+".flatpsibfd.ann.probsF", "r").readlines()[3].split()))
     if not args.fast:
         prob_psi = list(map(float, open(pid+".flatblast.ann.probsF", "r").readlines()[3].split()))
         prob_psihh = list(map(float, open(pid+".flatblastpsi.ann.probsF", "r").readlines()[3].split()))
-
-        for i in range(length):
-            for j in range(classes):
-                CD[j] = round((3*prob_psi[i*classes+j]+3*prob_hh[i*classes+j]+prob_psihh[i*classes+j])/7, 4)
-            index = CD.index(max(CD))
-            prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(CD[0])+"\t"+str(CD[1])+"\t"+str(CD[2])+"\t"+str(CD[3])+"\n")
+        if args.bfd:
+            for i in range(length):
+                for j in range(classes):
+                    CD[i][j] = round((3*prob_psi[i*classes+j]+3*prob_hh[i*classes+j]+prob_psihh[i*classes+j]+\
+                        3*prob_bfd[i*classes+j]+prob_hhbfd[i*classes+j])/11, 4)
+        else:
+            for i in range(length):
+                for j in range(classes):
+                    CD[i][j] = round((3*prob_psi[i*classes+j]+3*prob_hh[i*classes+j]+prob_psihh[i*classes+j])/7, 4)
     else:
-        for i in range(length):
-            for j in range(classes):
-                CD[j] = round(prob_hh[i*classes+j], 4)
-            index = CD.index(max(CD))
-            prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(CD[0])+"\t"+str(CD[1])+"\t"+str(CD[2])+"\t"+str(CD[3])+"\n")
+        if args.bfd:
+            for i in range(length):
+                for j in range(classes):
+                    CD[i][j] = round((3*prob_hh[i*classes+j]+3*prob_bfd[i*classes+j]+prob_hhbfd[i*classes+j])/7, 4)
+        else:
+            for i in range(length):
+                for j in range(classes):
+                    CD[i][j] = round(prob_hh[i*classes+j], 4)
+    for i in range(length):
+        index = CD[i].index(max(CD[i]))
+        prediction.write(str(i+1)+"\t"+aa[i]+"\t"+toChar[index]+"\t"+str(CD[i][0])+"\t"+str(CD[i][1])+"\t"+str(CD[i][2])+"\t"+str(CD[i][3])+"\n")
     prediction.close()
 
 # end

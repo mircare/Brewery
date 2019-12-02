@@ -1,3 +1,5 @@
+// Brewery: prediction of 1D protein structure annotations (https://github.com/mircare/Brewery)
+// Email us at gianluca[dot]pollastri[at]ucd[dot]ie if you wish to use it for purposes not permitted by the CC BY-NC-SA 4.0.
 
 // BRNN ver. 3.01 (5/11/2003)
 // Copyright (C) Gianluca Pollastri 2003

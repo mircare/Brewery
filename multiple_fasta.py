@@ -1,3 +1,6 @@
+# Brewery: prediction of 1D protein structure annotations (https://github.com/mircare/Brewery)
+# Email us at gianluca[dot]pollastri[at]ucd[dot]ie if you wish to use it for purposes not permitted by the CC BY-NC-SA 4.0.
+
 # Usage: python3 multiple_fasta.py -i Fastas/ --cpu 4 --parallel 2
 # (run 2 parallel instances of Brewery on 4 cores - total of 8 cores)
 

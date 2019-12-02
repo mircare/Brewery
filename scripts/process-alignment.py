@@ -1,3 +1,6 @@
+# Brewery: prediction of 1D protein structure annotations (https://github.com/mircare/Brewery)
+# Email us at gianluca[dot]pollastri[at]ucd[dot]ie if you wish to use it for purposes not permitted by the CC BY-NC-SA 4.0.
+
 # Encode alignment file using a weighting scheme derived from Krogh et all (1995).
 # Duplicates are filtered and external gaps are skipped.
 # No gap is considered to calculate the weight of the sequence.

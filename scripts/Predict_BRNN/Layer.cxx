@@ -1,3 +1,5 @@
+// Brewery: prediction of 1D protein structure annotations (https://github.com/mircare/Brewery)
+// Email us at gianluca[dot]pollastri[at]ucd[dot]ie if you wish to use it for purposes not permitted by the CC BY-NC-SA 4.0.
 
 // Layer ver 3.03
 // 12/12/2003

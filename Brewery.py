@@ -1,3 +1,6 @@
+# Brewery: prediction of 1D protein structure annotations (https://github.com/mircare/Brewery)
+# Email us at gianluca[dot]pollastri[at]ucd[dot]ie if you wish to use it for purposes not permitted by the CC BY-NC-SA 4.0.
+
 import argparse, configparser
 import os, sys
 import time

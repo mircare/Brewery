@@ -1,3 +1,6 @@
+# Brewery: prediction of 1D protein structure annotations (https://github.com/mircare/Brewery)
+# Email us at gianluca[dot]pollastri[at]ucd[dot]ie if you wish to use it for purposes not permitted by the CC BY-NC-SA 4.0.
+
 OBJECTST = Layer.o MModel.o BRNN.o NNt.o NN.o Predict_probs.o
 HEADERST = Layer.h MModel.h BRNN.h NNt.h NN.h Sequence.h 
 

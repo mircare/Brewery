@@ -1,8 +1,11 @@
 #!/usr/bin/perl
 
+# Brewery: prediction of 1D protein structure annotations (https://github.com/mircare/Brewery)
+# Email us at gianluca[dot]pollastri[at]ucd[dot]ie if you wish to use it for purposes not permitted by the CC BY-NC-SA 4.0.
+
 # Transforms a BLASTP output into a flat MA file containing in the first line
 # the number of alignments and the sequences in the following lines
-#
+
 
 
 $filen=$ARGV[0];

@@ -1,4 +1,7 @@
-""" split fasta file with multiple sequences into multiple fasta files with 1 sequence each"""
+# Brewery: prediction of 1D protein structure annotations (https://github.com/mircare/Brewery)
+# Email us at gianluca[dot]pollastri[at]ucd[dot]ie if you wish to use it for purposes not permitted by the CC BY-NC-SA 4.0.
+
+# split fasta file with multiple sequences into multiple fasta files with 1 sequence each
 import os
 import sys
 

@@ -1,11 +1,7 @@
-
-
-
+// Brewery: prediction of 1D protein structure annotations (https://github.com/mircare/Brewery)
+// Email us at gianluca[dot]pollastri[at]ucd[dot]ie if you wish to use it for purposes not permitted by the CC BY-NC-SA 4.0.
 
 #include "Model.h"
-
-
-
 
 void
 Model::alloc() {
@@ -18,8 +14,6 @@ Model::alloc() {
 	for (int y=0;y<NY;y++)
 		Conf[y]=new int[NY];
 }
-
-
 
 Model::Model(int the_NU, int the_NY, int the_NH, int the_context, int the_Moore, int the_NF,
 	int the_NB, int the_NH2, int the_CoF, int the_CoB, int the_Cseg, int the_Cwin, int the_Step, 

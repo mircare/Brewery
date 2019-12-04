@@ -50,7 +50,7 @@ echo `ls Predict_BRNN/models/SA4/*v78 |wc -w` > Predict_BRNN/models/modelv78_sa4
 ls Predict_BRNN/models/SA4/*v78 >> Predict_BRNN/models/modelv78_sa4
 echo `ls Predict_BRNN/models/SA4/*_BFD |wc -w` > Predict_BRNN/models/modelv8_BFD_sa4
 ls Predict_BRNN/models/SA4/*_BFD >> Predict_BRNN/models/modelv8_BFD_sa4
-echo `ls Predict_BRNN/models/SA14/*_HH+BFD |wc -w` > Predict_BRNN/models/modelv8_HH+BFD_sa4
+echo `ls Predict_BRNN/models/SA4/*_HH+BFD |wc -w` > Predict_BRNN/models/modelv8_HH+BFD_sa4
 ls Predict_BRNN/models/SA4/*_HH+BFD >> Predict_BRNN/models/modelv8_HH+BFD_sa4
 
 # CD4

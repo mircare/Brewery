@@ -502,7 +502,7 @@ if args.distill:
     else: # merge flatpsi and flatblast
         os.system('tail -qn +2 %s.flatpsi %s.flatblast | uniq > %s.flatblastpsi; sequences=`wc -l %s.flatblastpsi|awk \'{print $1}\'`; sed -i "1 i $sequences" %s.flatblastpsi' % (pid, pid, pid, pid, pid))
 else:
-    os.system('rm %s.chk %s.blastpgp %s.flatblast %s.flatblast.ann %s.pssm %s.psi %s.hhr %s.flatpsi %s.flatblastpsi2> /dev/null' % (pid, pid, pid, pid, pid, pid, pid, pid, pid))
+    os.system('rm %s.chk %s.blastpgp %s.flatblast %s.flatblast.ann %s.pssm %s.psi %s.hhr %s.flatpsi %s.flatblastpsi 2> /dev/null' % (pid, pid, pid, pid, pid, pid, pid, pid, pid))
     
 
 ### remove all the temporary files

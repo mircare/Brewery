@@ -16,7 +16,7 @@ ENV PATH="$HHLIB/bin:$HHLIB/scripts:${PATH}"
 # initialize Brewery
 RUN echo "[DEFAULT]" >> Brewery/scripts/config.ini
 RUN echo "psiblast = psiblast" >> Brewery/scripts/config.ini
-RUN echo "uniref90 = /uniref90/uniref90_2018-03.fasta" >> Brewery/scripts/config.ini
+RUN echo "uniref90 = /uniref90/uniref90.fasta" >> Brewery/scripts/config.ini
 RUN echo "hhblits = hhblits" >> Brewery/scripts/config.ini
 RUN echo "uniprot20 = /uniprot20/uniprot20_2016_02" >> Brewery/scripts/config.ini
 

@@ -108,42 +108,51 @@ aa = list("".join(line.strip() for line in open(filename, "r").readlines()[1:]))
 length = len(aa)
 
 flatpsi_ann = open(pid+".flatpsi.ann", "r").readlines()
+
+def concatenate (ann0, ann1, ann01):
+    with open(ann01, "w") as out:
+        # write header, protein name, and length
+        out.write("1\n44 3\n"+ pid +"\n"+ str(length) +"\n")
+
+        # concatenate and write input
+        tmp = ann0[4].strip().split(" ")
+        tmp0 = ann1[4].split(" ")
+        for j in range(length):
+            x = j*22
+            tmp.insert(x + 22 + j, " ".join(tmp0[x:x+22]))
+        out.write(" ".join(tmp))
+
 if not args.fast:
     os.system('python3 %s/process-alignment.py %s.flatblast flatblast %d' % (path, pid, args.cpu)) # generated with PSI-BLAST
 
     ## concatenate PSI-BLAST and HHblits inputs
     flatblast_ann = open(pid+".flatblast.ann", "r").readlines()
-
-    # write header, protein name, and length
-    flatblastpsi_ann = open(pid+".flatblastpsi.ann", "w")
-    flatblastpsi_ann.write("1\n44 3\n"+ pid +"\n"+ str(length) +"\n")
+    concatenate(flatblast_ann, flatpsi_ann, pid+".flatblastpsi.ann")
+    # # write header, protein name, and length
+    # flatblastpsi_ann = open(pid+".flatblastpsi.ann", "w")
+    # flatblastpsi_ann.write("1\n44 3\n"+ pid +"\n"+ str(length) +"\n")
 
     # concatenate and write input
-    tmp = flatblast_ann[4].strip().split(" ")
-    tmp0 = flatpsi_ann[4].split(" ")
-    for j in range(length):
-        x = j*22
-        tmp.insert(x + 22 + j, " ".join(tmp0[x:x+22]))
-    flatblastpsi_ann.write(" ".join(tmp))
-    flatblastpsi_ann.close()
+    # tmp = concatenate(flatblast_ann, flatpsi_ann)
+    # flatblastpsi_ann.write(" ".join(tmp))
+    # flatblastpsi_ann.close()
 
 # encode BFD alignments and concatenated with HHblits inputs
 if args.bfd:
     os.system('python3 %s/process-alignment.py %s_bfd.flatpsi flatpsi %d' % (path, pid, args.cpu)) # generated from BFD
+
+    ## concatenate HHblits and BFD inputs
     flatbfd_ann = open(pid+"_bfd.flatpsi.ann", "r").readlines()
+    concatenate(flatblast_ann, flatpsi_ann, pid+".flatpsibfd.ann")
 
-    # write header, protein name, and length
-    flatpsibfd_ann = open(pid+".flatpsibfd.ann", "w")
-    flatpsibfd_ann.write("1\n44 3\n"+ pid +"\n"+ str(length) +"\n")
-
-    # concatenate and write input
-    tmp = flatpsi_ann[4].strip().split(" ")
-    tmp0 = flatbfd_ann[4].split(" ")
-    for j in range(length):
-        x = j*22
-        tmp.insert(x + 22 + j, " ".join(tmp0[x:x+22]))
-    flatpsibfd_ann.write(" ".join(tmp))
-    flatpsibfd_ann.close()
+    # # concatenate and write input
+    # tmp = flatpsi_ann[4].strip().split(" ")
+    # tmp0 = flatbfd_ann[4].split(" ")
+    # for j in range(length):
+    #     x = j*22
+    #     tmp.insert(x + 22 + j, " ".join(tmp0[x:x+22]))
+    # flatpsibfd_ann.write(" ".join(tmp))
+    # flatpsibfd_ann.close()
 
 time3 = time.time()
 print('Alignments encoded in %.2fs' % (time3-time2))
@@ -160,6 +169,16 @@ if not args.noSS:
         os.system('%s %smodelv78_ss3 %s.flatblastpsi.ann > /dev/null' % (predict, models, pid))
     if args.bfd:
         os.system('%s %smodelv8_BFD_ss3 %s_bfd.flatpsi.ann > /dev/null' % (predict, models, pid))
+        os.system('%s %smodelv8_HH+BFD_ss3 %s.flatpsibfd.ann > /dev/null' % (predict, models, pid))
+    if args.fast and not args.bfd:
+        os.system('cp %s.flatpsi.ann %s.flatblast.ann' % (pid, pid))
+        os.system('%s %smodelv7_ss3 %s.flatblast.ann > /dev/null' % (predict, models, pid))
+
+        os.system('%s %smodelv78_ss3 %s.flatblastpsi.ann > /dev/null' % (predict, models, pid))
+        
+        os.system('cp %s.flatpsi.ann %s._bfd.flatpsi.ann' % (pid, pid))
+        os.system('%s %smodelv8_BFD_ss3 %s_bfd.flatpsi.ann > /dev/null' % (predict, models, pid))
+
         os.system('%s %smodelv8_HH+BFD_ss3 %s.flatpsibfd.ann > /dev/null' % (predict, models, pid))
 
     time4 = time.time()

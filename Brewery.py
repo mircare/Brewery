@@ -502,13 +502,15 @@ if args.distill:
     else: # merge flatpsi and flatblast
         os.system('tail -qn +2 %s.flatpsi %s.flatblast | uniq > %s.flatblastpsi; sequences=`wc -l %s.flatblastpsi|awk \'{print $1}\'`; sed -i "1 i $sequences" %s.flatblastpsi' % (pid, pid, pid, pid, pid))
 else:
-    os.system('rm %s.chk %s.blastpgp %s.flatblast %s.flatblast.ann %s.pssm %s.psi %s.hhr %s.flatpsi 2> /dev/null' % (pid, pid, pid, pid, pid, pid, pid, pid))
+    os.system('rm %s.chk %s.blastpgp %s.flatblast %s.flatblast.ann %s.pssm %s.psi %s.hhr %s.flatpsi %s.flatblastpsi2> /dev/null' % (pid, pid, pid, pid, pid, pid, pid, pid, pid))
     
 
 ### remove all the temporary files
 os.system('rm %s.flatblastpsi.ann+len.probsF %s.flatblastpsi.ann+len.probs %s.flatblast.ann+len.probsF %s.flatblast.ann+len.probs %s.flatblastpsi.ann+len %s.flatblast.ann+len %s.flatpsi.ann+len.probsF \
 %s.flatpsi.ann+len.probs %s.flatpsi.ann+len %s.flatblast.ann+ss3.probs %s.flatpsi.ann.probs %s.flatblast.ann.probs %s.flatblastpsi.ann+ss3.probsF %s.flatblast.ann+ss3 %s.flatblastpsi.ann.probsF \
 %s.flatblastpsi.ann %s.flatpsi.ann+ss3.probsF %s.flatpsi.ann %s.flatblastpsi.ann+ss3.probs %s.flatblastpsi.ann+ss3 %s.flatblastpsi.ann.probs %s.flatpsi.ann+ss3.probs %s.flatblast.ann+ss3.probsF \
-%s._bfd.flatpsi.ann+len.probs %s_bfd.flatpsi.ann+len.probsF %s_bfd.flatpsi.ann.probs %s_bfd.flatpsi.ann.probsF %s.flatpsibfd.ann+len.probs %s.flatpsibfd.ann+len.probsF %s.flatpsibfd.ann.probs \
-%s.flatpsibfd.ann.probsF %s.flatpsi.ann+ss3 %s.flatpsi.ann.probsF %s.flatblast.app %s.flatblast.ann.probsF %s.log %s.tmp 2> /dev/null' % (pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, \
-pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid))
+%s_bfd.flatpsi.ann+len.probs %s_bfd.flatpsi.ann+len.probsF %s_bfd.flatpsi.ann.probs %s_bfd.flatpsi.ann.probsF %s.flatpsibfd.ann+len.probs %s.flatpsibfd.ann+len.probsF %s.flatpsibfd.ann.probs \
+%s_bfd.flatpsi.ann %s.flatpsibfd.ann %s_bfd.flatpsi.ann+len %s.flatpsibfd.ann+len %s.flatbfd.ann+ss3 %s.flatbfd.ann+ss3.probs %s.flatbfd.ann+ss3.probsF %s.flatpsibfd.ann+ss3.probs %s.flatpsibfd.ann+ss3.probsF \
+%s_bfd.psi %s.fas %s_bfd.log %s_bfd.flatpsi %s.flatpsibfd.ann+ss3 %s.flatpsibfd.ann.probsF %s.flatpsi.ann+ss3 %s.flatpsi.ann.probsF %s.flatblast.app %s.flatblast.ann.probsF %s.log %s.tmp 2> /dev/null' \
+% (pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, \
+pid, pid, pid, pid, pid, pid, pid, pid, pid))

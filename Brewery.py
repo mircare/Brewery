@@ -134,6 +134,7 @@ elif not args.bfd:
     os.system('cp %s.flatpsi.ann %s_bfd.flatpsi.ann' % (pid, pid))
     concatenate(flatpsi_ann, flatpsi_ann, pid+".flatblastpsi.ann")
     os.system('cp %s.flatblastpsi.ann %s.flatpsibfd.ann' % (pid, pid))
+    flatblast_ann = flatbfd_ann = open(pid+".flatblast.ann", "r").readlines() # will be used for SS8
 
 # encode BFD alignments and concatenated with HHblits inputs
 if args.bfd:
@@ -141,7 +142,7 @@ if args.bfd:
 
     ## concatenate HHblits and BFD inputs
     flatbfd_ann = open(pid+"_bfd.flatpsi.ann", "r").readlines()
-    concatenate(flatblast_ann, flatpsi_ann, pid+".flatpsibfd.ann")
+    concatenate(flatpsi_ann, flatbfd_ann, pid+".flatpsibfd.ann")
 
 time3 = time.time()
 print('Alignments encoded in %.2fs' % (time3-time2))

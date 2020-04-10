@@ -1,23 +1,16 @@
-# Brewery
-### State-of-the-art ab initio prediction of 1D protein structure annotations 
+# Brewery: ab initio prediction of 1D protein structure annotations
 
+The docker container is available at https://hub.docker.com/r/mircare/brewery.
 The web server of Brewery is available at http://distilldeep.ucd.ie/brewery/.  
 The train and test sets are available at http://distilldeep.ucd.ie/brewery/data/.
 
-Porter 5 (state-of-the-art SS predictor) is available at http://distilldeep.ucd.ie/porter/.
-
 ### References
+Brewery: Deep Learning and deeper profiles for the prediction of 1D protein structure annotations<br>
+Bioinformatics, Oxford University Press; Mirko Torrisi and Gianluca Pollastri<br>
+doi: https://doi.org/10.1093/bioinformatics/btaa204
+
 Protein Structure Annotations; Essentials of Bioinformatics, Volume I. Springer Nature<br>
 Mirko Torrisi and Gianluca Pollastri; doi: https://doi.org/10.1007/978-3-030-02634-9_10.
-
-Deeper Profiles and Cascaded Recurrent and Convolutional Neural Networks for state-of-the-art Protein Secondary Structure Prediction, Scientific Reports, Nature Publishing Group<br>
-Mirko Torrisi, Manaz Kaleel and Gianluca Pollastri; doi: https://doi.org/10.1038/s41598-019-48786-x
-
-PaleAle 5.0: prediction of protein relative solvent accessibility by deep learning; Proteins, Springer Nature<br>
-Mirko Torrisi, Manaz Kaleel and Gianluca Pollastri; toll-free link: https://rdcu.be/bNlXS
-
-Porter 5: fast, state-of-the-art ab initio prediction of protein secondary structure in 3 and 8 classes<br>
-Mirko Torrisi, Manaz Kaleel and Gianluca Pollastri; bioRxiv 289033; doi: https://doi.org/10.1101/289033.
 
 
 

@@ -1,6 +1,6 @@
-# Brewery: ab initio prediction of 1D protein structure annotations
+# Brewery: prediction of 1D protein structure annotations
 
-The docker container is available at https://hub.docker.com/r/mircare/brewery.
+The docker container is available at https://hub.docker.com/r/mircare/brewery.  
 The web server of Brewery is available at http://distilldeep.ucd.ie/brewery/.  
 The train and test sets are available at http://distilldeep.ucd.ie/brewery/data/.
 

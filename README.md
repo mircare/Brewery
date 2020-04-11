@@ -1,18 +1,11 @@
+[![PWC](https://camo.githubusercontent.com/6887feb0136db5156c4f4146e3dd2681d06d9c75/68747470733a2f2f692e6372656174697665636f6d6d6f6e732e6f72672f6c2f62792d6e632d73612f342e302f38387833312e706e67)](https://github.com/mircare/Brewery/#license)
+
 # Brewery: prediction of 1D protein structure annotations
 
-The docker container is available at https://hub.docker.com/r/mircare/brewery.  
-The web server of Brewery is available at http://distilldeep.ucd.ie/brewery/.  
-The train and test sets are available at http://distilldeep.ucd.ie/brewery/data/.
+The web server, train and test sets of Brewery are available at http://distilldeep.ucd.ie/brewery/.  
+The docker container is available at https://hub.docker.com/r/mircare/brewery ([HOWTO](https://github.com/mircare/Brewery#use-the-docker-image)).  
 
-### References
-Brewery: Deep Learning and deeper profiles for the prediction of 1D protein structure annotations<br>
-Bioinformatics, Oxford University Press; Mirko Torrisi and Gianluca Pollastri<br>
-doi: https://doi.org/10.1093/bioinformatics/btaa204
-
-Protein Structure Annotations; Essentials of Bioinformatics, Volume I. Springer Nature<br>
-Mirko Torrisi and Gianluca Pollastri; doi: https://doi.org/10.1007/978-3-030-02634-9_10.
-
-
+See https://github.com/mircare/Porter5 to predict protein secondary structure only.
 
 ## Setup
 ```
@@ -146,6 +139,27 @@ Reference: Table 2 in https://doi.org/10.1101/289033.
 | :--- | :---: | :---: |
 | **Brewery** | **50.01%** | **48%** |
 | BrownAle | 46.5% | N.A. |
+
+
+## Citation
+If you use Brewery, please cite our Bioinformatics paper:
+```
+@article{torrisi_brewery_2020,
+	title = {Brewery: Deep Learning and deeper profiles for the prediction of 1D protein structure annotations},
+	doi = {10.1093/bioinformatics/btaa204},
+	journal = {Bioinformatics},
+	author = {Torrisi, Mirko and Pollastri, Gianluca}
+}
+```
+
+
+## References
+Brewery: Deep Learning and deeper profiles for the prediction of 1D protein structure annotations,<br>
+Bioinformatics, Oxford University Press; Mirko Torrisi and Gianluca Pollastri;<br>
+Guest link: https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btaa204/5811232?guestAccessKey=9a73ae2a-2cb6-4fe1-b333-a4f3261f02cf.
+
+Protein Structure Annotations; Essentials of Bioinformatics, Volume I. Springer Nature<br>
+Mirko Torrisi and Gianluca Pollastri; doi: https://doi.org/10.1007/978-3-030-02634-9_10.
 
 
 ## License

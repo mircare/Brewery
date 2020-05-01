@@ -5,7 +5,7 @@
 The web server, train and test sets of Brewery are available at http://distilldeep.ucd.ie/brewery/.  
 The docker container is available at https://hub.docker.com/r/mircare/brewery ([HOWTO](https://github.com/mircare/Brewery#use-the-docker-image)).  
 
-*The predictions of the UniProtKB entries for covid-19 are available at http://distilldeep.ucd.ie/brewery/covid.html.*  
+*The predictions of the UniProtKB entries for **covid-19** are available at http://distilldeep.ucd.ie/brewery/covid.html.*  
 See https://github.com/mircare/Porter5 to predict protein secondary structure only.
 
 ## Setup

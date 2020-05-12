@@ -8,6 +8,8 @@ The docker container is available at https://hub.docker.com/r/mircare/brewery ([
 *The predictions of the UniProtKB entries for **covid-19** are available at http://distilldeep.ucd.ie/brewery/covid.html.*  
 See https://github.com/mircare/Porter5 to predict protein secondary structure only.
 
+<p align="center"><img src="https://github.com/mircare/Brewery/blob/master/diagram%20pipeline.png" alt="Pipeline of Brewery">Diagram of the pipeline we propose to gather and exploit deeper profiles.</p>
+
 ## Setup
 ```
 $ git clone https://github.com/mircare/Brewery/ --depth 1 && rm -rf Brewery/.git

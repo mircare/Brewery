@@ -21,8 +21,8 @@ parser.add_argument("--noSS", help="Skip Secondary Structure prediction with Por
 parser.add_argument("--noTA", help="Skip Torsional Angles prediction with Porter+5", action="store_true")
 parser.add_argument("--noSA", help="Skip Solvent Accessibility prediction with PaleAle5", action="store_true")
 parser.add_argument("--noCD", help="Skip Contact Density prediction with BrownAle5", action="store_true")
-parser.add_argument("--distill", help="Generate useful outputs for 3D protein structure prediction", action="store_true")
-parser.add_argument("--setup", help="Initialize Brewery from scratch (it is recommended when there has been any change involving PSI-BLAST, HHblits, Brewery itself, etc).", action="store_true")
+parser.add_argument("--distill", help="Generate outputs useful for 3D protein structure prediction", action="store_true")
+parser.add_argument("--setup", help="Initialize Brewery from scratch (recommended when there has been any change involving PSI-BLAST, HHblits, Brewery itself, etc).", action="store_true")
 args = parser.parse_args()
 
 path = os.path.dirname(os.path.abspath(sys.argv[0]))+"/scripts"
@@ -47,7 +47,7 @@ if not os.path.exists(path+"/config.ini") or args.setup:
     # compile predict and set absolute paths for all model files
     os.system('cd %s/Predict_BRNN; make -B; cd ..;bash set_models.sh; cd %s' % (path, path))
     
-    print("\n>>>>> Setup completed successfully. If any problem, please run \"python3 Brewery.py --setup\". <<<<<\n")
+    print("\n>>>>> Setup completed successfully. If any problem occurs, please run \"python3 Brewery.py --setup\". <<<<<\n")
 else:
     config.read(path+"/config.ini")
 

@@ -161,8 +161,14 @@ Brewery: Deep Learning and deeper profiles for the prediction of 1D protein stru
 Bioinformatics, Oxford University Press; Mirko Torrisi and Gianluca Pollastri;<br>
 Guest link: https://academic.oup.com/bioinformatics/advance-article/doi/10.1093/bioinformatics/btaa204/5811232?guestAccessKey=9a73ae2a-2cb6-4fe1-b333-a4f3261f02cf.
 
-Protein Structure Annotations; Essentials of Bioinformatics, Volume I. Springer Nature<br>
-Mirko Torrisi and Gianluca Pollastri; doi: https://doi.org/10.1007/978-3-030-02634-9_10.
+Protein Structure Annotations; Essentials of Bioinformatics, Volume I. Springer Nature;<br>
+Mirko Torrisi and Gianluca Pollastri; Post-print: https://www.researchgate.net/publication/332048741_Protein_Structure_Annotations.
+
+Deeper Profiles and Cascaded Recurrent and Convolutional Neural Networks for state-of-the-art Protein Secondary Structure Prediction, Scientific Reports, Nature Publishing Group; Mirko Torrisi, Manaz Kaleel and Gianluca Pollastri;<br>
+doi: https://doi.org/10.1038/s41598-019-48786-x.
+
+PaleAle 5.0: prediction of protein relative solvent accessibility by deep learning, Amino Acids, Springer<br>
+Manaz Kaleel, Mirko Torrisi, Catherine Mooney and Gianluca Pollastri; Guest Link: https://rdcu.be/bNlXS.
 
 
 ## License

@@ -46,11 +46,10 @@ $ python3 Brewery/multiple_fasta.py -i Fastas/ --cpu 4 --fast
 # To run multiple predictions in parallel (using a total of 8 cores)
 $ python3 Brewery/multiple_fasta.py -i Fastas/ --cpu 4 --parallel 2 --fast
 ```
-All the parameters in the next section are valid.
 
 ## How to visualize the help of Brewery
 ```
-$ python3 Brewery/Porter5.py --help
+$ python3 Brewery/Brewery.py --help
 usage: Brewery.py [-h] [-input fasta_file] [--cpu CPU] [--fast] [--noSS]
                   [--noTA] [--noSA] [--noCD] [--distill] [--setup]
 

@@ -21,7 +21,7 @@ parser.add_argument("--noSS", help="Skip Secondary Structure prediction with Por
 parser.add_argument("--noTA", help="Skip Torsional Angles prediction with Porter+5", action="store_true")
 parser.add_argument("--noSA", help="Skip Solvent Accessibility prediction with PaleAle5", action="store_true")
 parser.add_argument("--noCD", help="Skip Contact Density prediction with BrownAle5", action="store_true")
-parser.add_argument("--distill", help="Generate outputs useful for 3D protein structure prediction", action="store_true")
+parser.add_argument("--tmp", help="Leave output files of HHblits and PSI-BLAST, i.e. log, hhr, psi, chk, and blastpgp files.", action="store_true")
 parser.add_argument("--setup", help="Initialize Brewery from scratch (recommended when there has been any change involving PSI-BLAST, HHblits, Brewery itself, etc).", action="store_true")
 args = parser.parse_args()
 
@@ -82,10 +82,7 @@ else:
 
 
 ### run HHblits and process output
-if args.distill:
-    os.system('%s -d %s -i %s -opsi %s.psi -diff inf -cpu %d -n 3 -maxfilt 150000 -maxmem 27 -v 2 2>> %s.log >> %s.log' % (config['DEFAULT']['hhblits'], config['DEFAULT']['uniprot20'], filename, pid, args.cpu, pid, pid))
-else:
-    os.system('%s -d %s -i %s -opsi %s.psi -cpu %d -n 3 -maxfilt 150000 -maxmem 27 -v 2 2>> %s.log >> %s.log' % (config['DEFAULT']['hhblits'], config['DEFAULT']['uniprot20'], filename, pid, args.cpu, pid, pid))
+os.system('%s -d %s -i %s -opsi %s.psi -cpu %d -n 3 -maxfilt 150000 -maxmem 27 -v 2 2>> %s.log >> %s.log' % (config['DEFAULT']['hhblits'], config['DEFAULT']['uniprot20'], filename, pid, args.cpu, pid, pid))
 os.system('%s/process-psi.sh %s.psi' % (path, pid))
 
 time2 = time.time()
@@ -494,23 +491,18 @@ if not args.noCD:
 timeEND = time.time()
 print('Brewery executed on %s in %.2fs (TOTAL)' % (filename, timeEND-time0))
 
-
-if args.distill:
-    if args.fast: # to guarantee consistency
-        os.system('cp %s.flatpsi %s.flatblastpsi' % (pid, pid))
-        os.system('mv %s.flatpsi.ann %s.flatblast.ann' % (pid, pid))
-    else: # merge flatpsi and flatblast
-        os.system('tail -qn +2 %s.flatpsi %s.flatblast | uniq > %s.flatblastpsi; sequences=`wc -l %s.flatblastpsi|awk \'{print $1}\'`; sed -i "1 i $sequences" %s.flatblastpsi' % (pid, pid, pid, pid, pid))
-else:
-    os.system('rm %s.chk %s.blastpgp %s.flatblast %s.flatblast.ann %s.pssm %s.psi %s.hhr %s.flatpsi %s.flatblastpsi 2> /dev/null' % (pid, pid, pid, pid, pid, pid, pid, pid, pid))
     
 
 ### remove all the temporary files
 os.system('rm %s.flatblastpsi.ann+len.probsF %s.flatblastpsi.ann+len.probs %s.flatblast.ann+len.probsF %s.flatblast.ann+len.probs %s.flatblastpsi.ann+len %s.flatblast.ann+len %s.flatpsi.ann+len.probsF \
 %s.flatpsi.ann+len.probs %s.flatpsi.ann+len %s.flatblast.ann+ss3.probs %s.flatpsi.ann.probs %s.flatblast.ann.probs %s.flatblastpsi.ann+ss3.probsF %s.flatblast.ann+ss3 %s.flatblastpsi.ann.probsF \
-%s.flatblastpsi.ann %s.flatpsi.ann+ss3.probsF %s.flatpsi.ann %s.flatblastpsi.ann+ss3.probs %s.flatblastpsi.ann+ss3 %s.flatblastpsi.ann.probs %s.flatpsi.ann+ss3.probs %s.flatblast.ann+ss3.probsF \
+%s.flatpsibfd.ann %s.flatpsi.ann+ss3.probsF %s.flatblastpsi.ann+ss3.probs %s.flatblastpsi.ann+ss3 %s.flatblastpsi.ann.probs %s.flatpsi.ann+ss3.probs %s.flatblast.ann+ss3.probsF %s.flatblastpsi \
 %s_bfd.flatpsi.ann+len.probs %s_bfd.flatpsi.ann+len.probsF %s_bfd.flatpsi.ann.probs %s_bfd.flatpsi.ann.probsF %s.flatpsibfd.ann+len.probs %s.flatpsibfd.ann+len.probsF %s.flatpsibfd.ann.probs \
-%s_bfd.flatpsi.ann %s.flatpsibfd.ann %s_bfd.flatpsi.ann+len %s.flatpsibfd.ann+len %s.flatbfd.ann+ss3 %s.flatbfd.ann+ss3.probs %s.flatbfd.ann+ss3.probsF %s.flatpsibfd.ann+ss3.probs %s.flatpsibfd.ann+ss3.probsF \
-%s_bfd.psi %s.fas %s_bfd.log %s_bfd.flatpsi %s.flatpsibfd.ann+ss3 %s.flatpsibfd.ann.probsF %s.flatpsi.ann+ss3 %s.flatpsi.ann.probsF %s.flatblast.app %s.flatblast.ann.probsF %s.log %s.tmp 2> /dev/null' \
+%s.flatblastpsi.ann %s_bfd.flatpsi.ann+len %s.flatpsibfd.ann+len %s.flatbfd.ann+ss3 %s.flatbfd.ann+ss3.probs %s.flatbfd.ann+ss3.probsF %s.flatpsibfd.ann+ss3.probs %s.flatpsibfd.ann+ss3.probsF \
+%s.flatpsibfd.ann+ss3 %s.flatpsibfd.ann.probsF %s.flatpsi.ann+ss3 %s.flatpsi.ann.probsF %s.flatblast.app %s.flatblast.ann.probsF %s.tmp 2> /dev/null' \
 % (pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, \
-pid, pid, pid, pid, pid, pid, pid, pid, pid))
+pid, pid, pid, pid))
+
+if not args.tmp:
+   os.system('rm %s.flatblast.ann %s.flatpsi.ann %s_bfd.flatpsi.ann %s.chk %s.blastpgp %s.flatblast %s.pssm %s.hhr %s.flatpsi %s.psi %s.log %s_bfd.flatpsi %s_bfd.psi    %s.fas %s_bfd.log 2> /dev/null' \
+% (pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid))

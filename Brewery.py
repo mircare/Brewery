@@ -12,7 +12,7 @@ if sys.version_info[0] < 3:
 
 ### set argparse
 parser = argparse.ArgumentParser(description="This is the standalone of Brewery. Run it on a FASTA file to predict its Secondary Structure in 3- and 8-classes (Porter5), Solvent Accessibility in 4 classes (PaleAle5), Torsional Angles in 14 classes (Porter+5) and Contact Density in 4 classes (BrownAle).",
-epilog="E.g., run Brewery on 4 cores: python3 Brewery.py -i example/2FLGA.fasta --cpu 4")
+epilog="E.g., python3 Brewery.py -i example/2FLGA.fasta --cpu 4 --fast")
 parser.add_argument("-input", metavar='fasta_file', type=str, nargs=1, help="FASTA file containing the protein to predict")
 parser.add_argument("--cpu", type=int, default=1, help="How many cores to perform this prediction")
 parser.add_argument("--fast", help="Use only HHblits (skip PSI-BLAST)", action="store_true")
@@ -21,8 +21,8 @@ parser.add_argument("--noSS", help="Skip Secondary Structure prediction with Por
 parser.add_argument("--noTA", help="Skip Torsional Angles prediction with Porter+5", action="store_true")
 parser.add_argument("--noSA", help="Skip Solvent Accessibility prediction with PaleAle5", action="store_true")
 parser.add_argument("--noCD", help="Skip Contact Density prediction with BrownAle5", action="store_true")
-parser.add_argument("--tmp", help="Leave output files of HHblits and PSI-BLAST, i.e. log, hhr, psi, chk, and blastpgp files.", action="store_true")
-parser.add_argument("--setup", help="Initialize Brewery from scratch (recommended when there has been any change involving PSI-BLAST, HHblits, Brewery itself, etc).", action="store_true")
+parser.add_argument("--tmp", help="Leave output files of HHblits and PSI-BLAST", action="store_true")
+parser.add_argument("--setup", help="Initialize Brewery from scratch", action="store_true")
 args = parser.parse_args()
 
 path = os.path.dirname(os.path.abspath(sys.argv[0]))+"/scripts"

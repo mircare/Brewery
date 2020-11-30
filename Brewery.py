@@ -12,7 +12,7 @@ if sys.version_info[0] < 3:
 
 ### set argparse
 parser = argparse.ArgumentParser(description="This is the standalone of Brewery. Run it on a FASTA file to predict its Secondary Structure in 3- and 8-classes (Porter5), Solvent Accessibility in 4 classes (PaleAle5), Torsional Angles in 14 classes (Porter+5) and Contact Density in 4 classes (BrownAle).",
-epilog="E.g., run Brewery on 4 cores: python3 Brewery.py -i example/2FLGA --cpu 4")
+epilog="E.g., run Brewery on 4 cores: python3 Brewery.py -i example/2FLGA.fasta --cpu 4")
 parser.add_argument("-input", metavar='fasta_file', type=str, nargs=1, help="FASTA file containing the protein to predict")
 parser.add_argument("--cpu", type=int, default=1, help="How many cores to perform this prediction")
 parser.add_argument("--fast", help="Use only HHblits (skip PSI-BLAST)", action="store_true")
@@ -29,11 +29,11 @@ path = os.path.dirname(os.path.abspath(sys.argv[0]))+"/scripts"
 ## PSI-BLAST and HHblits variables and paths.
 config = configparser.ConfigParser()
 if not os.path.exists(path+"/config.ini") or args.setup:
-    psiblast = input("Please insert the absolute path to psiblast (e.g., /home/username/psiblast): ")
-    uniref90 = input("Please insert the absolute path to uniref90 (e.g., /home/username/UniProt/uniref90.fasta): ")
+    psiblast = input("Please insert the absolute path to psiblast [optional] (e.g., /home/username/psiblast): ")
+    uniref90 = input("Please insert the absolute path to uniref90 [optional] (e.g., /home/username/UniProt/uniref90.fasta): ")
     hhblits = input("Please insert the call to HHblits (e.g., hhblits): ")
     uniprot20 = input("Please insert the absolute path to uniprot20 (e.g., /home/username/uniprot20_2016_02/uniprot20_2016_02): ")
-    bfd = input("Please insert the absolute path to BFD (e.g., /home/username/bfd/bfd_metaclust_clu_complete_id30_c90_final_seq.sorted_opt): ")
+    bfd = input("Please insert the absolute path to BFD [optional] (e.g., /home/username/bfd/bfd_metaclust_clu_complete_id30_c90_final_seq.sorted_opt): ")
     
     config['DEFAULT'] = {'psiblast': psiblast,
                     'uniref90': uniref90,
@@ -48,6 +48,7 @@ if not os.path.exists(path+"/config.ini") or args.setup:
     os.system('cd %s/Predict_BRNN; make -B; cd ..;bash set_models.sh; cd %s' % (path, path))
     
     print("\n>>>>> Setup completed successfully. If any problem occurs, please run \"python3 Brewery.py --setup\". <<<<<\n")
+    parser.print_help()
 else:
     config.read(path+"/config.ini")
 
@@ -82,7 +83,7 @@ else:
 
 
 ### run HHblits and process output
-os.system('%s -d %s -i %s -opsi %s.psi -cpu %d -n 3 -maxfilt 150000 -maxmem 27 -v 2 2>> %s.log >> %s.log' % (config['DEFAULT']['hhblits'], config['DEFAULT']['uniprot20'], filename, pid, args.cpu, pid, pid))
+os.system('%s -d %s -i %s -o %s.hhr -opsi %s.psi -cpu %d -n 3 -maxfilt 150000 -maxmem 27 -v 2 2>> %s.log >> %s.log' % (config['DEFAULT']['hhblits'], config['DEFAULT']['uniprot20'], filename, pid, pid, args.cpu, pid, pid))
 os.system('%s/process-psi.sh %s.psi' % (path, pid))
 
 time2 = time.time()
@@ -501,7 +502,7 @@ os.system('rm %s.flatblastpsi.ann+len.probsF %s.flatblastpsi.ann+len.probs %s.fl
 %s.flatblastpsi.ann %s_bfd.flatpsi.ann+len %s.flatpsibfd.ann+len %s.flatbfd.ann+ss3 %s.flatbfd.ann+ss3.probs %s.flatbfd.ann+ss3.probsF %s.flatpsibfd.ann+ss3.probs %s.flatpsibfd.ann+ss3.probsF \
 %s.flatpsibfd.ann+ss3 %s.flatpsibfd.ann.probsF %s.flatpsi.ann+ss3 %s.flatpsi.ann.probsF %s.flatblast.app %s.flatblast.ann.probsF %s.tmp 2> /dev/null' \
 % (pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, pid, \
-pid, pid, pid, pid))
+pid, pid, pid))
 
 if not args.tmp:
    os.system('rm %s.flatblast.ann %s.flatpsi.ann %s_bfd.flatpsi.ann %s.chk %s.blastpgp %s.flatblast %s.pssm %s.hhr %s.flatpsi %s.psi %s.log %s_bfd.flatpsi %s_bfd.psi    %s.fas %s_bfd.log 2> /dev/null' \

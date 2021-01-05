@@ -97,7 +97,7 @@ if args.bfd:
     os.system('%s/process-psi.sh %s_bfd.psi' % (path, pid))
 
     time2 = time.time()
-    print('BFD harnessed in %.2fs' % (time22-time2))
+    print('BFD harnessed in %.2fs' % (time2-time22))
 
 
 #### encode alignments made with HHblits or PSI-BLAST

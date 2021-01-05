@@ -19,12 +19,13 @@ parser.add_argument("-i", type=str, nargs=1, help="Indicate the directory contai
 parser.add_argument("--cpu", type=int, default=1, help="Specify how many cores to assign to each prediction.")
 parser.add_argument("--parallel", type=int, default=1, help="Specify how many instances to run in parallel.")
 parser.add_argument("--fast", help="Use only HHblits (skipping PSI-BLAST) to perform a faster prediction.", action="store_true")
+parser.add_argument("--bfd", help="Harness also the BFD database (https://bfd.mmseqs.com/)", action="store_true")
 parser.add_argument("--noSS", help="Skip Secondary Structure prediction with Porter5", action="store_true")
 parser.add_argument("--noTA", help="Skip Torsional Angles prediction with Porter+5", action="store_true")
 parser.add_argument("--noSA", help="Skip Solvent Accessibility prediction with PaleAle5", action="store_true")
 parser.add_argument("--noCD", help="Skip Contact Density prediction with BrownAle5", action="store_true")
-parser.add_argument("--distill", help="Generate useful outputs for 3D protein structure prediction", action="store_true")
-parser.add_argument("--setup", help="Initialize Brewery from scratch. Run it when there has been any change involving PSI-BLAST, HHblits, Brewery itself, etc.", action="store_true")
+parser.add_argument("--tmp", help="Leave output files of HHblits and PSI-BLAST", action="store_true")
+parser.add_argument("--setup", help="Initialize Brewery from scratch", action="store_true")
 args = parser.parse_args()
 
 ## check arguments
@@ -51,6 +52,8 @@ sorted_files = sorted(os.listdir(os.getcwd()), key = os.path.getsize, reverse=Tr
 
 if args.fast:
     sorted_files = [line + " --fast" for line in sorted_files]
+if args.bfd:
+    sorted_files = [line + " --bfd" for line in sorted_files]
 if args.noSS:
     sorted_files = [line + " --noSS" for line in sorted_files]
 if args.noTA:
@@ -59,8 +62,8 @@ if args.noSA:
     sorted_files = [line + " --noSA" for line in sorted_files]
 if args.noCD:
     sorted_files = [line + " --noCD" for line in sorted_files]
-if args.distill:
-    sorted_files = [line + " --distill" for line in sorted_files]
+if args.tmp:
+    sorted_files = [line + " --tmp" for line in sorted_files]
 
 #ligth the bomb // launch the parallel code
 with Pool(args.parallel) as p:
